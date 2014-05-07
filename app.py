@@ -1,20 +1,19 @@
-import string
 import json
-from flask import Flask, request, make_response
+from flask import Flask, request, make_response, render_template
+from jinja2 import Template
 
 app = Flask(__name__)
 
-todolist = []
+bulletin_board = []
 
 @app.route("/")
 def get_list():
-    html = string.join([('<p>%s</p>' % item) for item in todolist], '\n')
-    return make_response(html)
+    return render_template('list.html', items=bulletin_board)
 
 @app.route("/item", methods=['PUT'])
 def add_list():
     name = request.args.get('name')
-    todolist.append(name)
+    bulletin_board.append({'name': name})
     return make_response(json.dumps({'status': 'success'}))
 
 if __name__ == "__main__":
