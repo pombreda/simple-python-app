@@ -1,15 +1,29 @@
 import string
 import json
 from flask import Flask, request, make_response
+from jinja2 import Template
 
 app = Flask(__name__)
 
 todolist = []
 
+list_template = Template("""
+<h1>TODO List</h1>
+{% if items %}
+<ul>
+  {% for item in items %}
+  <li>{{ item }}</li>
+  {% endfor %}
+</ul>
+{% else %}
+[no items]
+{% endif %}
+""")
+
 @app.route("/")
 def get_list():
-    html = string.join([('<p>%s</p>' % item) for item in todolist], '\n')
-    return make_response(html)
+    out = list_template.render(items=todolist)
+    return make_response(out)
 
 @app.route("/item", methods=['PUT'])
 def add_list():
