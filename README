@@ -14,3 +14,12 @@ Roadmap
 2. Learn how to use the web framework
 3. Make the app
 4. Profit?
+
+Getting started
+===============
+```
+cd into the directory
+virtualenv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
