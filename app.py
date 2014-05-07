@@ -1,35 +1,43 @@
 import string
 import json
-from flask import Flask, request, make_response
+from datetime import datetime
+from flask import Flask, request, make_response, render_template
+from flask_sqlalchemy import SQLAlchemy
 from jinja2 import Template
 
+DB_CONFIG = {
+    'SQLALCHEMY_DATABASE_URI': 'sqlite:////tmp/todo-list.db',
+    'SQLALCHEMY_ECHO': False,
+    'SECRET_KEY': '',
+    'DEBUG': True,
+}
+
 app = Flask(__name__)
+app.config.update(DB_CONFIG)
+db = SQLAlchemy(app)
 
-todolist = []
+class Todo(db.Model):
+    def __init__(self, name):
+        self.name = name
+        self.time = datetime.utcnow()
 
-list_template = Template("""
-<h1>TODO List</h1>
-{% if items %}
-<ul>
-  {% for item in items %}
-  <li>{{ item }}</li>
-  {% endfor %}
-</ul>
-{% else %}
-[no items]
-{% endif %}
-""")
+    __tablename__ = 'todos'
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String())
+    pub_date = db.Column(db.DateTime)
 
 @app.route("/")
 def get_list():
-    out = list_template.render(items=todolist)
-    return make_response(out)
+    return render_template('list.html', items=Todo.query.order_by(Todo.pub_date.desc()).all())
 
 @app.route("/item", methods=['PUT'])
 def add_list():
     name = request.args.get('name')
-    todolist.append(name)
+    new_item = Todo(name)
+    db.session.add(new_item)
+    db.session.commit()
     return make_response(json.dumps({'status': 'success'}))
 
 if __name__ == "__main__":
+    db.create_all()
     app.run(debug=True)
