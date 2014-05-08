@@ -4,7 +4,7 @@ from flask import Flask, request, make_response
 
 app = Flask(__name__)
 
-bulletin_board = []
+bulletin_board = ['item 1', 'item 2']
 
 @app.route("/")
 def get_list():
