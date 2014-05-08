@@ -1,0 +1,10 @@
+<h1>Bulletin Board</h1>
+{% if items %}
+<ul>
+  {% for item in items %}
+  <li>{{ item.name }}</li>
+  {% endfor %}
+</ul>
+{% else %}
+[no items]
+{% endif %}

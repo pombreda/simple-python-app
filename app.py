@@ -15,7 +15,7 @@ def get_list():
 def add_list():
     name = request.args.get('name')
     bulletin_board.append(name)
-    return make_response(json.dumps({'status': 'success'}))
+    return ''
 
 if __name__ == "__main__":
     app.run(debug=True)
