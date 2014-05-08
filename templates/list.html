@@ -1,8 +1,8 @@
-<h1>Bulletin Board</h1>
+<h1><span>Bulletin</span> <span style="color:red;">Board</span></h1>
 {% if items %}
-<ul>
+<ul style="color:blue;">
   {% for item in items %}
-  <li>{{ item.name }}</li>
+  <li>{{ item }}</li>
   {% endfor %}
 </ul>
 {% else %}
